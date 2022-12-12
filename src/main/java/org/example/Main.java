@@ -72,7 +72,7 @@ public class Main {
 
             }
             bw.close();
-            System.out.println(" Finish ");
+            System.out.println("Finish");
         } catch (IOException e) {
             e.printStackTrace();
         }
