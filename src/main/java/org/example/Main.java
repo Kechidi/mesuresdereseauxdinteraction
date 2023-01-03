@@ -1,6 +1,6 @@
 package org.example;
 
-import org.graphstream.algorithm.Toolkit;
+
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.implementations.DefaultGraph;
 import org.graphstream.stream.file.FileSourceEdge;
@@ -25,7 +25,7 @@ public class Main {
         //g.display();
 
         try {
-            fs.readAll("/home/tkechidi@mmtt.fr/MesuresRI/donnees.txt");
+            fs.readAll("/home/kechidi/mesuresdereseauxdinteraction/donnees.txt");
         } catch (IOException e) {
             System.out.println(e);
 
