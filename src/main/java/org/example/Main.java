@@ -62,7 +62,7 @@ public class Main {
 
         System.out.println("*****************************Calcul de la distribution des degrés**************************");
         int[] destrib_Degres = degreeDistribution(g);
-        String filename = "donnee_distribution_des_degres.dat";
+        String filename = "./ressources/donnee_distribution_des_degres.dat";
         try {
             String filepath = System.getProperty("user.dir") + File.separator + filename;
             FileWriter fw = new FileWriter(filepath);
@@ -120,7 +120,7 @@ public class Main {
         System.out.println("La distance moyenne dans un réseau aléatoire avec les mêmes caractéristiques est :" + Math.log(graph.getNodeCount()) / Math.log(averageDegree(graph)));
 
         //Enregistrer les données dans fichier.dat
-        String filename1 = "DataDistance.dat";
+        String filename1 = "./ressources/DataDistance.dat";
         try {
             String filepath = System.getProperty("user.dir") + File.separator + filename1;
             FileWriter fw = new FileWriter(filepath);
