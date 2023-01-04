@@ -43,7 +43,7 @@ Dans le cas contraire,  elle renvoie false. </br>
 4-1 Ce fichier [Données_DistributionDegres](./ressources/donnee_distribution_des_degres.dat) contient les resultats obtenus pour la distribution des degrès, ces données sont tracées via l'outil Gnuplot, le graphe obtenu correspond donc à la probabilité qu'un sommet(noeud) choisi au hasard ait un degré k en fonction de k en échelle lineaire ainsi qu'en échelle log-log.  </br>
 
 *En echelle linéaire* ce [script](./ressources/plot_dd.gnu) a permit de tracer le graphe suivant :
-![distribution des degres](./ressources/distributionDegLin.png)
+![distribution des degres](./ressources/dd_dblp.png)
 
 *En echelle en log log* l'utilisation de ce [script](./ressources/plot_log_log.gnu) a permit de tracer ce graphe :
 ![distribution des degres en log](./ressources/destributionDegre_log_log.png)
@@ -68,3 +68,29 @@ Cette dernière a également été tracer via l'outil Gnuplot , ainsi que le [sc
 
 Selon les commande **fit** et **gnuplot** on voit  que `gamma=  2.70539  +/- 0.04437  (1.64%) `  .  </br>
 
+# Distance moyenne dans le réseau  </br>
+
+`Rappel => La distance entre deux noeuds d'un graphe est la longueur d'un plus court chemin entre ces deux noeuds. La longueur d'un chemin est sa longueur en nombre d'arrêtes. ` </br>
+
+5-1 Comme le calcul des plus courts chemins entre toutes paires de noeuds peut prendre plusieurs heures pour une telle taille de réseau, c'est pourquoi on se limitera  à un échantillon de 1000 noeuds choisis aléatoirement  en faisant un parcours en largeur. </br>
+
+Pour permet de faire ce calcul, et les résultats obtenus sont stockés dans le fichier  [DataDistance](/dataDistance.dat) . </br>
+Ces résultats sont tracés via Gnuplot grâce au [script](/tracer_distribution_distances.gnuplot) . </br>
+
+Ce qui nous mène au graphe suivant
+
+![Distribution des distances ](/Distance.png)
+
+
+Nous obtenons egalement le résultat de la distance moyenne calculée pour 1000 sommets choisis au hasard qui est de => **6.787408571969219** . </br>
+
+5-2 D'après la distance moyenne obtenue , en effet , l'hypothèse des six degrés de séparation est confirmée . </br>
+
+5-3 Il s'agit également d'un réseau petit monde, car on obteint une plus courte distance entre deux noeuds aléatoires . </br>
+
+5-4 La distance moyenne dans un réseau aléatoire avec les mêmes caractéristiques est de => **6.700611818856679** .</br>
+
+5-5 **Analyse du graphe des distributions des distances** </br>
+
+Dans la courbe obtenue on observe que selon les données du sommet on peut effectuer la remarque qu'il s'agit de la même distance que partage plusieurs noeuds.
+Ainsi nous pouvons déduire que cette distribution suit bien une loi Binomiale. </br>
