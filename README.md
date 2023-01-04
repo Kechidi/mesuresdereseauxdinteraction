@@ -43,7 +43,7 @@ Dans le cas contraire,  elle renvoie false. </br>
 4-1 Ce fichier [Données_DistributionDegres](./ressources/donnee_distribution_des_degres.dat) contient les resultats obtenus pour la distribution des degrès, ces données sont tracées via l'outil Gnuplot, le graphe obtenu correspond donc à la probabilité qu'un sommet(noeud) choisi au hasard ait un degré k en fonction de k en échelle lineaire ainsi qu'en échelle log-log.  </br>
 
 *En echelle linéaire* ce [script](./ressources/plot_dd.gnu) a permit de tracer le graphe suivant :
-![distribution des degres](./ressources/dd_dblp.png)
+![distribution des degres](./ressources/distributionDegLin.png)
 
 *En echelle en log log* l'utilisation de ce [script](./ressources/plot_log_log.gnu) a permit de tracer ce graphe :
 ![distribution des degres en log](./ressources/destributionDegre_log_log.png)
