@@ -1,14 +1,19 @@
 package org.example;
 
 
+import org.graphstream.graph.BreadthFirstIterator;
 import org.graphstream.graph.Graph;
+import org.graphstream.graph.Node;
 import org.graphstream.graph.implementations.DefaultGraph;
+import org.graphstream.stream.file.FileSource;
 import org.graphstream.stream.file.FileSourceEdge;
 
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 
 import static org.graphstream.algorithm.Toolkit.*;
@@ -25,7 +30,7 @@ public class Main {
         //g.display();
 
         try {
-            fs.readAll("/home/kechidi/mesuresdereseauxdinteraction/donnees.txt");
+            fs.readAll("./ressources/donnees.txt");
         } catch (IOException e) {
             System.out.println(e);
 
@@ -51,12 +56,12 @@ public class Main {
             System.out.println("Non! le graphe n'est pas connexe");
 
 
-        System.out.println(" La connexité d'un graphe aléatoire avec la même taille & le degré moyen   " + (averageDegree(g)> Math.log(g.getNodeCount())));
+        System.out.println(" La connexité d'un graphe aléatoire avec la même taille & le degré moyen   " + (averageDegree(g) > Math.log(g.getNodeCount())));
 
         System.out.println(" Un réseau aléatoire avec cette même taille  devient connexe à partir du degré moyen " + Math.log(g.getNodeCount()));
 
         System.out.println("*****************************Calcul de la distribution des degrés**************************");
-        int[] destrib_Degres =degreeDistribution(g);
+        int[] destrib_Degres = degreeDistribution(g);
         String filename = "donnee_distribution_des_degres.dat";
         try {
             String filepath = System.getProperty("user.dir") + File.separator + filename;
@@ -65,8 +70,8 @@ public class Main {
             for (int i = 0; i < destrib_Degres.length; i++) {
 
                 if (destrib_Degres[i] != 0) {
-                    System.out.printf(Locale.US, "%6d%20.8f%n", i, (double)destrib_Degres[i] / g.getNodeCount());
-                    bw.write(i+" "+ (double)destrib_Degres[i] / g.getNodeCount()+ "\n");
+                    System.out.printf(Locale.US, "%6d%20.8f%n", i, (double) destrib_Degres[i] / g.getNodeCount());
+                    bw.write(i + " " + (double) destrib_Degres[i] / g.getNodeCount() + "\n");
                 }
 
 
@@ -77,10 +82,14 @@ public class Main {
             e.printStackTrace();
         }
 
+
+
     }
 
 
 }
+
+
 
 
 
