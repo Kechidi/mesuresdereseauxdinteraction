@@ -127,11 +127,11 @@ Egalement le [script](./ressources/tracer_dist_degree_alea_log.gnu) pour l'echel
 
 6-2 Un graphe contenant le modèle de Barabasi-Albert est un graphe qui génère aléatoirement des réseaux sans échelle à l'aide d'un mécanisme d'attachement préférentiel permettant de connecter les noeuds.
 
-Ce genre de graphe a été implémenté dans ce Tp , et en ayant les mêmes caractéristiques que le réseau DBLP on obtient les résultats suivants : </br>
-Le nombre de noeud de ce graphe generer avec le generateur barbasi est => **317080** </br>
-Le nombre de liens de ce graphe avec le generateur barbasi est =>**1110112** </br>
-Degré moyen du graphe BAN => **7.002094268798828** </br>
-Connexité du graphe aléatoire => **true** </br>
+Ce genre de graphe a été implémenté dans ce Tp , et en ayant les mêmes caractéristiques que le réseau DBLP on obtient les résultats suivants :
+Le nombre de noeud de ce graphe generer avec le generateur barbasi est => **317080** 
+Le nombre de liens de ce graphe avec le generateur barbasi est =>**1110112** 
+Degré moyen du graphe BAN => **7.002094268798828** 
+Connexité du graphe aléatoire => **true** 
 Le coefficient de clustering => **4.3767738485098553E-4**
 
 
