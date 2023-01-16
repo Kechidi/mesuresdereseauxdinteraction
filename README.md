@@ -46,7 +46,7 @@ Dans le cas contraire,  elle renvoie false. </br>
 ![distribution des degres](./ressources/distributionDegLin.png)
 
 *En echelle en log log* l'utilisation de ce [script](./ressources/plot_log_log.gnu) a permit de tracer ce graphe :
-![distribution des degres en log](./ressources/destributionDegre_log_log.png)
+![distribution des degres en log](./ressources/distDegreLog.png)
 
 
 4-2 Oui, on observe une ligne droite en échelle log-log. </br>
@@ -74,12 +74,12 @@ Selon les commande **fit** et **gnuplot** on voit  que `gamma=  2.70539  +/- 0.0
 
 5-1 Comme le calcul des plus courts chemins entre toutes paires de noeuds peut prendre plusieurs heures pour une telle taille de réseau, c'est pourquoi on se limitera  à un échantillon de 1000 noeuds choisis aléatoirement  en faisant un parcours en largeur. </br>
 
-Pour permet de faire ce calcul, et les résultats obtenus sont stockés dans le fichier  [DataDistance](/dataDistance.dat) . </br>
-Ces résultats sont tracés via Gnuplot grâce au [script](/tracer_distribution_distances.gnuplot) . </br>
+Pour permet de faire ce calcul, et les résultats obtenus sont stockés dans le fichier  [DataDistance](./ressources/DataDistance.dat) . </br>
+Ces résultats sont tracés via Gnuplot grâce au [script](./ressources/distance.gnu) . </br>
 
 Ce qui nous mène au graphe suivant
 
-![Distribution des distances ](/Distance.png)
+![Distribution des distances ](./ressources/Distances.png)
 
 
 Nous obtenons egalement le résultat de la distance moyenne calculée pour 1000 sommets choisis au hasard qui est de => **6.787408571969219** . </br>
@@ -94,3 +94,51 @@ Nous obtenons egalement le résultat de la distance moyenne calculée pour 1000 
 
 Dans la courbe obtenue on observe que selon les données du sommet on peut effectuer la remarque qu'il s'agit de la même distance que partage plusieurs noeuds.
 Ainsi nous pouvons déduire que cette distribution suit bien une loi Binomiale. </br>
+
+# Générer un réseau aléatoire & et un réseau avec Barabasi-Albert </br>
+
+Le modèle de Barabási–Albert (BA) est un algorithme pour la génération 
+aléatoire de réseaux sans échelle à l'aide d'un mécanisme d'attachement préférentiel. 
+On pense que plusieurs systèmes naturels ou humains, tel que l'Internet, le world wide web, 
+les réseaux de citations, et certains réseaux sociaux sont approximativement sans échelle. Ils contiennent en tout cas quelques nœuds (appelés hubs ou moyeux) 
+avec un degré inhabituellement élevé par rapport aux autres nœuds du réseau. Le modèle BA tente d'expliquer l'existence de tels nœuds dans de véritables réseaux. L'algorithme est
+nommé d'après ses inventeurs Albert-László Barabási et Réka Albert et est un cas particulier d'un modèle plus général appelé modèle de Price
+
+6-1 Afin de générer un réseau aléatoire, GraphStream nous le permet avec son générateur *RandomGenerator()* en précisant le nombre de noeuds et le degré moyen souhaité. Quant au nombre de liens, ceci varie
+entre une réalisation et une autre. </br>
+
+
+**Résultats** </br>
+
+Le nombre de noeuds pour un graphe  généré aléatoirement => **317080** </br>
+Le nombre de liens pour un graphe généré aléatoirement => **950399** </br>
+Le degré moyen d'un graphe généré aléatoirement => **5.994563102722168** </br>
+Connexité du graphe aléatoire => **false** </br>
+Le coefficient de clustering d'un graphe généré aléatoirement => **3.7999301117284935E-5** </br>
+
+Le [script](./ressources/tracer_dist_degree_graphe_alea.gnu) a permit le tracage du graphe de la distribution des degrés en echelle linéaire suivant
+
+
+![Distribution des degres pour un graphe aleatoire en lineaire ](./ressources/destributionDegre_graphe_aleatoire.png)
+
+Egalement le [script](./ressources/tracer_dist_degree_alea_log.gnu) pour l'echelle en log log
+
+![Distribution des degres pour un graphe aléatoire en log ](./ressources/destributionDegre_log_graphe_alea.png)
+
+6-2 Un graphe contenant le modèle de Barabasi-Albert est un graphe qui génère aléatoirement des réseaux sans échelle à l'aide d'un mécanisme d'attachement préférentiel permettant de connecter les noeuds.
+
+Ce genre de graphe a été implémenté dans ce Tp , et en ayant les mêmes caractéristiques que le réseau DBLP on obtient les résultats suivants : </br>
+Le nombre de noeud de ce graphe generer avec le generateur barbasi est => **317080** </br>
+Le nombre de liens de ce graphe avec le generateur barbasi est =>**1110112** </br>
+Degré moyen du graphe BAN => **7.002094268798828** </br>
+Connexité du graphe aléatoire => **true** </br>
+Le coefficient de clustering => **4.3767738485098553E-4**
+
+
+Le [script](./ressources/tracer_dist_degree_graphe_BAN.gnu) a permit le tracage du graphe de la distribution des degrés en echelle linéaire suivant
+
+![Distribution des degres pour BAN en lineaire ](./ressources/destributionDegre_lineaire_BAN.png)
+
+Egalement le [script](./ressources/tracer_dist_degree_graphe_BAN_log.gnu) pour l'echelle en log log
+
+![Distribution des degres pour BAN en log ](./ressources/destributionDegre_BAN_log.png)
