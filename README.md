@@ -40,7 +40,15 @@ Dans le cas contraire,  elle renvoie false. </br>
 ## Génération de fichier de données
 
 
-4-1 Ce fichier [Données_DistributionDegres](./ressources/donnee_distribution_des_degres.dat) contient les resultats obtenus pour la distribution des degrès, ces données sont tracées via l'outil Gnuplot, le graphe obtenu correspond donc à la probabilité qu'un sommet(noeud) choisi au hasard ait un degré k en fonction de k en échelle lineaire ainsi qu'en échelle log-log.  </br>
+4-1 Ce fichier [Données_DistributionDegres](./ressources/donnee_distribution_des_degres.dat) contient les resultats obtenus pour la distribution des degrès, ces données sont tracées via l'outil Gnuplot, le graphe obtenu correspond donc à la probabilité qu'un sommet(noeud) choisi au hasard ait un degré k en fonction de k en échelle lineaire ainsi qu'en échelle log-log on a utilsé [Toolkit.degreeDistribution()](https://data.graphstream-project.org/api/gs-algo/current/org/graphstream/algorithm/Toolkit.html#degreeDistribution(org.graphstream.graph.Graph)) pour obtenir $N_k$ et normaliser par la suite :</br>
+   ```java
+    int[] dd = Toolkit.degreeDistribution(graph);
+    for (int k = 0; k < dd.length; k++) {
+      if (dd[k] != 0) {
+        System.out.printf(Locale.US, "%6d%20.8f%n", k, (double)dd[k] / graph.getNodeCount());
+      }
+    }
+   ```
 
 *En echelle linéaire* ce [script](./ressources/plot_dd.gnu) a permit de tracer le graphe suivant :
 ![distribution des degres](./ressources/distributionDegLin.png)
