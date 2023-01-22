@@ -168,3 +168,14 @@ De plus le graphe ayant le mécanisme d'attachement préférentiel intègre deux
 La croissance signifie que le nombre de noeuds dans le réseau augmente avec le temps . </br>
 L'attachement préférentiel signifie que plus un noeud est connecté, plus il est suceptible de recevoir de nouveauc liens. </br>
 Les noeuds avec un degré plus élevé ont une plus grande capacité à saisir les liens ajoutés au réseau.  </br>
+
+
+# Rapport sur le TP3 : Propagation dans des réseaux
+
+La communication entre les collaborateurs scientifique se fait généralement par mail. Et cela a malheureusement des incovenients dont les virus infirmatique pouvant être présents dans les pièces jointes de ces mails et donc une épidémie informatique se répand dans les sytèmes.</br>
+Notre étude se basera donc sur la propagation de ce virus au sein du réseau tout en sachant que : </br>
+
+un individu envoie en moyenne un mail par semaine à chacun de ses collaborateurs.
+Un individu met à jour son anti-virus en moyenne deux fois par mois. Cela nettoie son système mais ne le protège pas de nouvelles infections car le virus mute.
+L'épidémie commence avec un individu infecté (patient zéro).
+
