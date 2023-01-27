@@ -49,7 +49,9 @@ public class PropagationDansDesReseaux{
 
 
         //SimulationScenario1(g);
-        SimulationScenario2(g);
+        //SimulationScenario2(g);
+        SimulationScenario3(g);
+        //SimulationScenario1(ReseauAleatoire(317080,6));
 
 
 
@@ -76,6 +78,37 @@ public class PropagationDansDesReseaux{
             }
         }
         return k;
+    }
+
+
+    public static Graph ReseauAleatoire(int Noeuds, int degreeMoyen) {
+        System.setProperty("org.graphstream.ui", "user.dir");
+        // instanciation d'un graphe nommé g
+        Graph g = new SingleGraph("RandomGraph");
+        // instanciation du générateur nommé gen (cette instanciation a pour but la création des graphiques aléatoires quelque soit la taille)
+        Generator gen = new RandomGenerator(degreeMoyen, false, false);
+        gen.addSink(g);
+        gen.begin();
+        //l'ajout d'un nouveau noeud
+        for (int i = 0; i < Noeuds; i++)
+            gen.nextEvents();
+        gen.end();
+
+        return g;
+
+    }
+
+    public static Graph BarabasiAlbertNetwork(int Noeuds, int degreeMoyen) {
+        Graph graphBAN = new SingleGraph("BAN");
+        Generator gen = new RandomGenerator(degreeMoyen, false, false);
+        gen.addSink(graphBAN);
+        gen.begin();
+        //l'ajout d'un nouveau noeud
+        for (int i = 0; i < Noeuds; i++)
+            gen.nextEvents();
+        gen.end();
+
+        return graphBAN;
     }
     //Méthode pour calculer les individus contaminés sachant que la probabilité de contaminer un collaborateur est 1/7
     public static int patientPositif(Node n, int nbPos) {
@@ -178,6 +211,66 @@ public class PropagationDansDesReseaux{
         System.out.println("Nouveau seuil épidémique du réseau après modification ( <k> / <k²> ) => " + (degreMoy / carredegreMoy));
 
     }
+
+
+
+
+
+
+    /**
+     * Simulation du 3eme scénario : On réussit à convaincre 50 % des individus de convaincre
+     * un de leurs contacts de mettre à jour en permanence son anti-virus (immunisation sélective).
+     */
+    public static void SimulationScenario3(Graph g){
+        //Compteur pour les individus immunisés
+        int nbImmunise = 0;
+        for(Node noeud : g) {
+            //Si un voisin est immunisé on incrémente le compteur
+            if ((int)(Math.random() * 2 + 1) == 1 ) {
+                //Le voisin est choisi aléatoirement
+                int voisinAleat = (int)(Math.random() );
+                noeud.getEdge(voisinAleat).getOpposite(noeud).setAttribute("immunise", true);
+                nbImmunise += 1;
+            }
+        }
+        Node s = g.getNode(0);
+        s.setAttribute("infected", true);
+        int nbPos= 1;
+        for(int i = 0; i<84; i++){
+            for (Node n : g){
+                if(n.hasAttribute("infected")){
+                    for(Edge e : n){
+                        nbPos = patientPositif(e.getOpposite(n), nbPos);
+                    }
+                }
+                nbPos = patientNegatif(n, nbPos);
+            }
+            //System.out.println("Jour "+ i + " nombre d'individus infectés : " + nbInfect + " nombre dindividus protégés : " + nbImmunise  );
+            System.out.println(i +" "+ nbPos);
+        }
+        //Question 3
+        double degreMoy = 0.0;
+        double carreDegreMoy;
+        int somme=0;
+        for(Node n : g) {
+            if(!n.hasAttribute("immunise")) {
+                degreMoy += n.getDegree();
+                somme += Math.pow(n.getDegree(), 2);
+            }
+        }
+        // Nombre de noeuds restants
+        int nbNoeuds = g.getNodeCount() - nbImmunise;
+        degreMoy /= nbNoeuds;
+        carreDegreMoy = (somme / nbNoeuds);
+
+        System.out.println("\n *********Résultats des mesures du réseau après la simulation du scénario 3  \n");
+        System.out.println("Nombre de noeuds pouvant  être infectés  => " + nbNoeuds);
+        System.out.println("Degré moyen après modification ( <k> ) => " + degreMoy);
+        System.out.println("Degré moyen au carré après modification ( <k²> ) => " + carreDegreMoy);
+        System.out.println("Nouveau seuil épidémique du réseau après modification ( <k> / <k²> ) => " + (degreMoy / carreDegreMoy));
+    }
+
+
 
 
     public static void writeData(String filename, String liste){
