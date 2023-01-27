@@ -179,3 +179,270 @@ un individu envoie en moyenne un mail par semaine à chacun de ses collaborateur
 Un individu met à jour son anti-virus en moyenne deux fois par mois. Cela nettoie son système mais ne le protège pas de nouvelles infections car le virus mute.
 L'épidémie commence avec un individu infecté (patient zéro).
 
+
+# 1-1 Le taux de propagation du virus
+
+Le taux de propagation d'un virus **λ** est le nombre moyen de cas secondaires provoqués par un seul individu infecté au cours d'une periode. C'est la propbabilité **P** de transmettre le virus pendant une certaine unité de temps diviser par le taux **µ** de guérissant des individus infectés.
+
+=> **λ = \frac{P}{µ}** </br>
+Où **P=1/7** => Probabilité de transmettre le virus à un collaborateurs vu qu'ils s'envoient en moyenne un mail par semaine. </br>
+et **µ=1/14** => Probabilité qu'un individu mette à jour son anti virus vu qu'un individu nettoie et mets à jour son système en moyenne 2 fois par mois et celui -ci prend effet après 14 jours.</br>
+Le taux de propagation serait donc :
+
+**λ = \frac{P}{µ}** </br>
+=> (1/7) / (1/14) = 2
+
+# 1-2 Le seuil épidémique
+
+Il est important de comprendre comment se propage une épidémie et analyser à partir de quel point une épidémie peut s'emballer. D'où l'importance du seuil épidémique et comme on voit bien que le taux de propagation ne dépond pas du réseau, on doit donc creser et chercher le seuil épidémique de ce réseau. </br>
+Notons le seuil épidémique : `Sλ = <k> / <k²>` , où ``<k²>`` est la dispersion des degrés.
+
+Et désormais si **λ > Sλ** =>  L'épidémie  se poursuit. </br>
+si **λ < Sλ** =>  L'épidémie s'abstient. </br>
+
+# 1-3 Comparaison des seuils epidemique
+
+Nous ontenons les résultat suivants
+
+![Seuil epidemique ](./ressources/Resultat.png)
+
+Et donc => on voit que le seuil epidémique d'un réseau aléatoire au même degré moyen est approximativement = 0.1311 , plus élevé comparé a celui du réseau DBLP. Nous dire que cette différence est dûe à la divergence du degré de clustering.
+
+
+
+# 2 - Simulation des scénarios
+Dans cette partie on simule la propagation du virus jour par jour pendant 3 mois avec 3 différents scénarios. </br>
+
+Pour commencer , on implémente la méthodes permettant de calculer et de retourner la distribution des degrés moyens nommée **k** ainsi que  2 méthodes permettant réspéctivement de retourner le nombre d'undividus positifs et les individus guéris en tenant compte de la probabilité de contaminer un collaborateur est de 1/7 et de mettre à jour l'anti virus est 1/14 . </br>
+
+
+## 2-1 Scénario 1 : On ne fait rien pour empêcher l'épidémie
+
+Via l'outil *Gnuplot* on trace un graphe qui represente l'evolution de la pandémie et sa propagation dans le systeme .</br>
+Le [script](./ressources/s1.gnu) a permit de dessiner le graphe suivant:
+
+
+![Graphe scénario1 ](./ressources/Scenario1.png)
+
+Nous voyons clairement et très vite la propagation qui augmente d'une certaine vitesse notamment les 20 / 25 premiers jours de contamination, suivit d'une propagation constante.
+Le premier scénario nous montre que le fait de ne rien faire a permit au virus de poursuivre sa contamination de se propager très rapidement dans le réseau.
+
+La méthode implémentée pour ce scénario fut :
+
+```java
+   /**
+ * Simulation du premier scénario : On ne fait rien pour empêcher l'épidémie
+ */
+public static void SimulationScenario1(Graph g) {
+        // Selon les hypothèses l'épidémie comence avec un individu infecté qui est le patient 0
+        Node n = g.getNode(0);
+        n.setAttribute("infected", true);
+        int nbPos = 1;
+        //Comme il y'a 7 jours par semaine et que nos calculs se font sur 12 semaines => 7 x 12 = 84 d'où 84 jours
+        for (int i = 1; i <= 84; i++) {
+        for (Node s : g) {
+        if (s.hasAttribute("infected")) {
+        for (Edge e : s) {
+        nbPos = patientPositif(e.getOpposite(s), nbPos);
+        }
+        }
+        nbPos = patientNegatif(s, nbPos);
+        }
+        System.out.println(i + " " + nbPos);
+        }
+        }
+```
+
+## 2-2 Scénario 2 : On réussit à convaincre 50 % des individus de mettre à jour en permanence leur anti-virus (immunisation aléatoire)
+
+Le 2ème scénario affecte moins les noeuds du réseau et afin de montrer ceci, ce [script](./ressources/s2.gnu) nous permet d'y voir plus clairement à travers le graphe suivant:
+
+![Graphe scénario2 ](./ressources/Scenario2.png)
+
+Où on observe une propagation importante les 20-25 premiers jours et devient stable par la suite.
+En revenche on constate  que la propagation du virus a diminué dans le réseau lors de cette deuxième simulation. </br>
+
+La méthode implémentée pour ce scénario fut :
+
+```java
+ /**
+ * Simulation du 2ème scénario :On réussit à convaincre 50 % des individus de mettre à jour en permanence leur anti-virus (immunisation aléatoire).
+ */
+public static void SimulationScenario2(Graph g) {
+        int nbImmunise = 0;
+        for (Node s : g) {
+        //on immunise aléatoirement la moitié de la population
+        if ((int) (Math.random() * 2 + 1) == 1) {
+        s.setAttribute("immunise", true);
+        nbImmunise += 1;
+        }
+        }
+        Node n = g.getNode(0);
+        n.setAttribute("infected", true);
+        int nbInfecte = 1;
+        for (int i = 0; i < 84; i++) {
+        for (Node s : g) {
+        if (s.hasAttribute("infected")) {
+        for (Edge e : s) {
+        nbInfecte = patientPositif(e.getOpposite(s), nbInfecte);
+        }
+        }
+        nbInfecte = patientNegatif(s, nbInfecte);
+        }
+        System.out.println(i + " " + nbInfecte);
+        }
+
+        double degreMoy = 0.0;
+        double carredegreMoy;
+        int somme = 0;
+        for (Node s : g) {
+        //Calcul du degré moyen
+        if (!s.hasAttribute("immunise")) {
+        degreMoy += s.getDegree();
+        somme += Math.pow(s.getDegree(), 2);
+        }
+        }
+        // Nombre de noeuds restants
+        int nbNoeuds = g.getNodeCount() - nbImmunise;
+
+        degreMoy /= nbNoeuds;
+        carredegreMoy = (double) (somme / nbNoeuds);
+
+
+        System.out.println("\n *********Résultats des mesures du réseau après la simulation du scénario 2  \n");
+        System.out.println("Nombre de noeuds pouvant  être infectés  => " + nbNoeuds);
+        System.out.println("Degré moyen après modification ( <k> ) => " + degreMoy);
+        System.out.println("Degré moyen au carré après modification ( <k²> ) => " + carredegreMoy);
+        System.out.println("Nouveau seuil épidémique du réseau après modification ( <k> / <k²> ) => " + (degreMoy / carredegreMoy));
+
+        }
+
+```
+
+
+## 2-3 Scénario 3 : On réussit à convaincre 50 % des individus de convaincre un de leurs contacts de mettre à jour en permanence son anti-virus (immunisation sélective).
+
+Avec l'outil *Gnuplot* , et grâce au [script](./ressources/s3.dat) , on obtient le graphique suivant :
+
+![Graphe scénario3 ](./ressources/Scenario3.png)
+
+**Analyse du graphe obtenu** => On voit que l'immunisation selective est plus efficace vu le nombre d'infectés, il est beaucoup plus réduit comparé aux deux autres scénarios .
+
+La méthode implémentée pour ce scénario fut :
+
+```java
+ /**
+ * Simulation du 3eme scénario : On réussit à convaincre 50 % des individus de convaincre
+ * un de leurs contacts de mettre à jour en permanence son anti-virus (immunisation sélective).
+ */
+public static void SimulationScenario3(Graph g){
+        //Compteur pour les individus immunisés
+        int nbImmunise = 0;
+        for(Node noeud : g) {
+        //Si un voisin est immunisé on incrémente le compteur
+        if ((int)(Math.random() * 2 + 1) == 1 ) {
+        //Le voisin est choisi aléatoirement
+        int voisinAleat = (int)(Math.random() );
+        noeud.getEdge(voisinAleat).getOpposite(noeud).setAttribute("immunise", true);
+        nbImmunise += 1;
+        }
+        }
+        Node s = g.getNode(0);
+        s.setAttribute("infected", true);
+        int nbPos= 1;
+        for(int i = 0; i<84; i++){
+        for (Node n : g){
+        if(n.hasAttribute("infected")){
+        for(Edge e : n){
+        nbPos = patientPositif(e.getOpposite(n), nbPos);
+        }
+        }
+        nbPos = patientNegatif(n, nbPos);
+        }
+        //System.out.println("Jour "+ i + " nombre d'individus infectés : " + nbInfect + " nombre dindividus protégés : " + nbImmunise  );
+        System.out.println(i +" "+ nbPos);
+        }
+        //Question 3
+        double degreMoy = 0.0;
+        double carreDegreMoy;
+        int somme=0;
+        for(Node n : g) {
+        if(!n.hasAttribute("immunise")) {
+        degreMoy += n.getDegree();
+        somme += Math.pow(n.getDegree(), 2);
+        }
+        }
+        // Nombre de noeuds restants
+        int nbNoeuds = g.getNodeCount() - nbImmunise;
+        degreMoy /= nbNoeuds;
+        carreDegreMoy = (somme / nbNoeuds);
+
+        System.out.println("\n *********Résultats des mesures du réseau après la simulation du scénario 3  \n");
+        System.out.println("Nombre de noeuds pouvant  être infectés  => " + nbNoeuds);
+        System.out.println("Degré moyen après modification ( <k> ) => " + degreMoy);
+        System.out.println("Degré moyen au carré après modification ( <k²> ) => " + carreDegreMoy);
+        System.out.println("Nouveau seuil épidémique du réseau après modification ( <k> / <k²> ) => " + (degreMoy / carreDegreMoy));
+        }
+
+
+```
+
+
+## Simulation et utilisation des mêmes scénarios dans un réseau aléatoire et un réseau généré avec la méthode d'attachement préférentiel de la même taille et le même degré moyen
+
+#### Scénario 1 pour un graphe aléatoire =>
+
+![Graphe scénario1 ](./ressources/Scenario1Aleatoire.png)
+
+#### Scénario 2 pour un graphe aléatoire =>
+
+
+
+![Graphe scénario2 ](./ressources/Scenario2Aleatoire.png)
+
+![Résultats des mesures du réseau après la simulation du scénario 2](./ressources/re.png)
+
+
+#### Scénario 3 pour un graphe aléatoire =>
+
+*Note :* Pour ce scénario, à plusieurs reprise le résultat était égal à 0, il a donc fallut refaire et réexecuter plusieurs fois le scénario afin d'obtenir ce graphique.
+
+![Graphe scénario3 ]()
+
+
+####  => Scénario 1 pour un graphe BarabasiAlbert
+
+![Graphe scénario1 ](./ressources/Scenario1BarabasiAlbert.png)
+
+#### Scénario 2 pour un graphe BarabasiAlbert =>
+
+
+
+![Graphe scénario2 ](./ressources/Scenario2BarabasiAlbert.png)
+
+
+#### Scénario 3 pour un graphe BarabasiAlbert =>
+
+*Note :* Pour ce scénario, à plusieurs reprise le résultat était égal à 0, il a donc fallut refaire et réexecuter plusieurs fois le scénario afin d'obtenir ce graphique.
+
+![Graphe scénario3 ]()
+
+
+
+
+
+
+
+
+
+                     
+
+
+
+
+
+
+
+
+
+

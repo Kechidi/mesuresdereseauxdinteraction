@@ -47,11 +47,44 @@ public class PropagationDansDesReseaux{
 
 
 
+        System.out.println("*******************Scénario 1 **************************");
 
-        //SimulationScenario1(g);
+        //  SimulationScenario1(g);
+
+        System.out.println("*******************Scénario 2 **************************");
+
         //SimulationScenario2(g);
-        SimulationScenario3(g);
+
+        System.out.println("*******************Scénario 3 **************************");
+
+        // SimulationScenario3(g);
+
+
+        System.out.println("*********************Scénario 1 pour un graphe aléatoire ************************");
+
         //SimulationScenario1(ReseauAleatoire(317080,6));
+        System.out.println("*******************  Scénario 2 pour un graphe aléatoire **************************");
+
+        //SimulationScenario2(ReseauAleatoire(317080,6));
+        System.out.println("*********************Scénario 3  pour un graphe aléatoire ************************");
+
+
+
+        // SimulationScenario3(ReseauAleatoire(317080,6));
+
+
+        System.out.println("*********************Scénario 1 pour un graphe BarabasiAlbert************************");
+
+
+        //SimulationScenario1( BarabasiAlbertNetwork(317080,6));
+        System.out.println("*********************Scénario 2 pour un graphe BarabasiAlbert************************");
+
+
+        //SimulationScenario2(BarabasiAlbertNetwork(317080,6));
+        System.out.println("*********************Scénario 3 pour un graphe BarabasiAlbert************************");
+
+        SimulationScenario3(BarabasiAlbertNetwork(317080,6));
+
 
 
 
