@@ -1,5 +1,6 @@
 package org.example;
 
+import org.graphstream.algorithm.Toolkit;
 import org.graphstream.algorithm.generator.Generator;
 import org.graphstream.algorithm.generator.RandomGenerator;
 import org.graphstream.graph.Edge;
@@ -31,14 +32,15 @@ public class PropagationDansDesReseaux{
             System.out.println(e);
 
         }
-        double beta = 1. / 7;
-        double mu = 1./ 14;
-        System.out.println("Le taux de propagation du virus est : " + beta / mu);
-        System.out.println(" le seuil épidémique du réseau est : ");
-        double degreMoyen = averageDegree(g);
-        //
-        System.out.println(" le seuil épidémique du réseau est :"+ degreMoyen);
-        System.out.println("Le seuil théorique d'un réseau aléatoire du même degré moyen : " + 1 / (degreMoyen + 1));
+
+        System.out.println("||||||||||||||||||| 1-Taux de propagation du virus |||||||||||||||||| Seuil épidémique du réseau ||||||||||||||||||||  Comparaison avec le seuil théorique d'un réseau aléatoire du même degré moyen |||||||||||");
+
+
+        double k = averageDegree(g);
+        double G_DBLP = k / DegreeDistribution(g);
+        double G_Alea = 1 / (k+1);
+        System.out.println("Le seuil épidémique du réseau (DBLP) λc est =>  " + k +" / "+ DegreeDistribution(g) + " = " +  G_DBLP);
+        System.out.println("Le seuil épidémique du réseau Aléatoire λc est => " + 1 +" / "+  (k+1) + " = " +  G_Alea);
 
 
 
@@ -46,7 +48,8 @@ public class PropagationDansDesReseaux{
 
 
 
-        SimulationScenario1(g);
+        //SimulationScenario1(g);
+        SimulationScenario2(g);
 
 
 
@@ -54,7 +57,26 @@ public class PropagationDansDesReseaux{
     }
 
 
-
+    /**
+     * Distribution des degrés
+     *
+     * @return double
+     */
+    public static double DegreeDistribution(Graph g) {
+        double k = 0.0;
+        int i;
+        //Création d'un tableau  contenant la distribution des degrés stockées, les résultats sont par la suite utilisés pour le calcul du seuil épidémique
+        //=> Les valeurs contenues dans les cellules du tableau ce sont les degrés des noeuds du réseau
+        int[] DegreeDist = Toolkit.degreeDistribution(g);
+        //On parcours le tableau et si celui-ci n'est pas vide
+        for (i = 0; i < DegreeDist.length; i++) {
+            if (DegreeDist[i] > 0) {
+                //On divise la racine carré des degrés par le nombre de noeud du réseau
+                k += Math.pow(i, 2) * ((double) DegreeDist[i] / g.getNodeCount());
+            }
+        }
+        return k;
+    }
     //Méthode pour calculer les individus contaminés sachant que la probabilité de contaminer un collaborateur est 1/7
     public static int patientPositif(Node n, int nbPos) {
         Random r = new Random();
@@ -104,6 +126,58 @@ public class PropagationDansDesReseaux{
 
     }
 
+
+    /**
+     * Simulation du 2ème scénario :On réussit à convaincre 50 % des individus de mettre à jour en permanence leur anti-virus (immunisation aléatoire).
+     */
+    public static void SimulationScenario2(Graph g) {
+        int nbImmunise = 0;
+        for (Node s : g) {
+            //on immunise aléatoirement la moitié de la population
+            if ((int) (Math.random() * 2 + 1) == 1) {
+                s.setAttribute("immunise", true);
+                nbImmunise += 1;
+            }
+        }
+        Node n = g.getNode(0);
+        n.setAttribute("infected", true);
+        int nbInfecte = 1;
+        for (int i = 0; i < 84; i++) {
+            for (Node s : g) {
+                if (s.hasAttribute("infected")) {
+                    for (Edge e : s) {
+                        nbInfecte = patientPositif(e.getOpposite(s), nbInfecte);
+                    }
+                }
+                nbInfecte = patientNegatif(s, nbInfecte);
+            }
+            System.out.println(i + " " + nbInfecte);
+        }
+
+        double degreMoy = 0.0;
+        double carredegreMoy;
+        int somme = 0;
+        for (Node s : g) {
+            //Calcul du degré moyen
+            if (!s.hasAttribute("immunise")) {
+                degreMoy += s.getDegree();
+                somme += Math.pow(s.getDegree(), 2);
+            }
+        }
+        // Nombre de noeuds restants
+        int nbNoeuds = g.getNodeCount() - nbImmunise;
+
+        degreMoy /= nbNoeuds;
+        carredegreMoy = (double) (somme / nbNoeuds);
+
+
+        System.out.println("\n||Résultats des mesures du réseau après la simulation du scénario 2  ||:\n");
+        System.out.println("Nombre de noeuds pouvant être infectés  => " + nbNoeuds);
+        System.out.println("Degré moyen après modification  => " + degreMoy);
+        System.out.println("Degré moyen au carré après modification ( <k²> ) => " + carredegreMoy);
+        System.out.println("Nouveau seuil épidémique du réseau après modification ( <k> / <k²> ) => " + (degreMoy / carredegreMoy));
+
+    }
 
 
     public static void writeData(String filename, String liste){
